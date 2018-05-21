@@ -1,0 +1,51 @@
+{
+    "parser": "babel-eslint",
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es6": true,
+        "node": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            //是否支持实验阶段的语法
+            "experimentalObjectRestSpread": true,
+            "jsx": true
+        }
+    },
+    "rules": {
+        // 使console不报error， build的时候会自动去除
+        "no-console": 0,
+        "indent": [0, 4],
+        "max-len": [
+            "error",
+            { "code": 150, "ignoreStrings": true, "ignoreComments": true }
+        ],
+        "no-new": [0],
+        // 允许单个参数的函数不加括号
+        "arrow-parens": [0],
+        // 允许匿名函数
+        "func-names": [0],
+        // 允许使用表达式
+        "no-unused-expressions": [0],
+        // 允许括号中换行
+        "function-paren-newline": [0],
+        // 允许在switch的case中生命
+        "no-case-declarations": [0],
+        // 允许函数里不返回结果
+        "consistent-return": [0],
+        // 允许单个export的时候采用非default形式
+        "import/prefer-default-export": [0],
+        // 允许使用_
+        "no-underscore-dangle": [0],
+        // 允许不写全路径
+        "import/no-unresolved": [0],
+        // 允许不写全后缀
+        "import/extensions": [0],
+        // 因为涉及到dom的内容修改，允许修改参数
+        "no-param-reassign": [0]
+    },
+    "extends": "eslint-config-airbnb"
+}

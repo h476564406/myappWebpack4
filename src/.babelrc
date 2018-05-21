@@ -1,0 +1,35 @@
+{
+    // preset，也就是预置条件。转码规则
+    "presets": [
+        [
+            // 支持被认为是 latest 的Babel所有插件
+            "env",
+            {
+                "targets": {
+                    // 确定在 preset的插件中支持的浏览器版本, 支持拥有市场份额超过1%的浏览器, 浏览器的最新两个版本以及ie8以上
+                    "browsers": ["> 1%", "last 2 versions", "not ie <= 8"],
+                    // 据当前 Node.js 版本进行动态转换
+                    "node": "current"
+                },
+                "modules": false
+            }
+        ],
+        // 添加草案阶段, 使用新特性
+        "stage-2"
+    ],
+    // Babel 几乎可以编译所有时新的 JavaScript 语法，但对于 APIs 来说却并非如此。例如： Promise、Set、Map 等新增对象，Object.assign、Object.entries等静态方法。
+    "plugins": [
+        // 支持 jsx
+        "transform-react-jsx",
+        [
+            "transform-runtime",
+            {
+                "helpers": true,
+                "polyfill": true,
+                "regenerator": true,
+                // 用babel-runtime在babel的编译过程中，根据用到的API, 把API转换成es5语法.
+                "moduleName": "babel-runtime"
+            }
+        ]
+    ]
+}
