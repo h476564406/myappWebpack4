@@ -1,47 +1,58 @@
 import Dep from './Dep';
-// 数据监听器 对数据对象的所有属性进行监听，发生变化了，通知观察者Watchers
-export function Observer(data) {
+
+export function Observe(data) {
     Object.keys(data).forEach(property => {
         this.defineReactive(data, property, data[property]);
-    });
+    }, this);
 }
-export function observe(value) {
-    if (!value || Object.prototype.toString.call(value) !== '[object Object]') {
+
+// 1. 为data的所有属性设置依赖收集函数 defineReactive get()  dep.connect(Dep.readyWatcher);
+// 2. 为data的所有属性设置更新函数 defineReactive set() dep.notify();
+export function observeData(data) {
+    if (!data || Object.prototype.toString.call(data) !== '[object Object]') {
         return;
     }
-    return new Observer(value);
+
+    return new Observe(data);
 }
-Observer.prototype = {
-    // 对data里的每个属性进行监听， 直到每个属性的子属性值为基本类型的数据
+
+Observe.prototype = {
+    // 1. 为property收集watchers(dep<-->watchers), dep 是该属性的的 watcher collector
+    // 2. value全是引用类型
     defineReactive(data, property, value) {
-        // Dep 是该属性的的 watcher collector
-        const dep = new Dep(property);
-        // 如果不这么做，在访问子属性的时候子属性没办法触发get函数
-        // 让子属性也能被get劫持
-        observe(value);
+        const dep = new Dep();
+
+        // 递归属性，收集watchers
+        observeData(value);
+
         Object.defineProperty(data, property, {
             enumerable: true,
             configurable: false,
             get() {
                 // 如果有属性在模板中出现，在模版解析过程中，会设置一个未与任何属性绑定的待用new Watcher
                 if (Dep.readyWatcher) {
-                    // 1.watcher会遍历取得最后的值，将属性值的每一个子属性注册到同一个watcher中
-                    // 属性相关的一个watcher可能对应多个dep, 属性的子属性变化，watcher会收到通知， 并且因为在同一个实例中，能对父属性进行处理。
-                    // watcher.depIds[dep.id] = dep;
-                    // data.user.name  两个 dep1 user, dep2 name
-                    // 2.可能模板中多处用到了某个属性user, user可以被多个 watcher订阅。
-                    // 一个属性可能对应多个watcher
-                    // dep.addWatcher(watcher);
-                    // 往dep中注册watcher， dep通知watcher更新
+                    /*
+                        1.watcher会遍历取得最后的值，将属性值的每一个子属性注册到同一个watcher中
+                        如果property的层级很深，一个watcher会对应多个dep. 属性的子属性变化，watcher会收到通知， 并且因为在同一个实例中，能对父属性进行处理。
+                        watcher.depIds[dep.id] = dep;
+                        e.g. data.user.name, 会产生两个dep。 dep1： user, dep2： name
+
+                        2. 在模版中，如果一个属性和多个指令有关，一个属性会对应多个watcher。
+                        e.g. 可能模板中多处用到了data.user, user可以被多个 watcher订阅。
+                    */
                     dep.connect(Dep.readyWatcher);
                 }
+
                 return value;
             },
+
             set(newValue) {
                 if (newValue === value) {
                     return;
                 }
+
                 value = newValue;
+
                 dep.notify();
             },
         });
