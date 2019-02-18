@@ -2,7 +2,7 @@ import { CompileUtil } from './CompileUtil';
 
 /*
     对每个元素节点的指令进行解析，根据指令模板替换数据完成第一次渲染，
-    准备好readyWatcher，传入更新时的回调函数。
+    准备好target，传入更新时的回调函数。
 */
 function Compile(el, vm) {
     this.$vm = vm;

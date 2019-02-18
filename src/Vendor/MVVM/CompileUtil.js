@@ -104,10 +104,10 @@ export function CompileUtil(vm) {
                 `${directive}Updater`
             ];
 
-            // 第一次渲染 view, 此时Dep.readyWatcher还不存在, 被触发的getter函数只是得到值，并没有绑定watcher
+            // 第一次渲染 view, 此时Dep.target还不存在, 被触发的getter函数只是得到值，并没有绑定watcher
             updaterFn && updaterFn(getValue(vm, property));
 
-            // 创建readyWatcher, 在初始化Wather的过程中连接watcher和deps。传入回调函数， 更新时调用。
+            // 创建target, 在初始化Wather的过程中连接watcher和deps。传入回调函数， 更新时调用。
             new Watcher(vm, property, newValue => {
                 updaterFn && updaterFn(newValue);
             });

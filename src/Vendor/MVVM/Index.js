@@ -1,4 +1,4 @@
-import { observeData } from './Observer';
+import { observe } from './Observer';
 import Compile from './Compile';
 
 /* Mvvm入口函数
@@ -14,7 +14,7 @@ function MVVM(options) {
     this._proxyData();
     this._proxyComputed();
 
-    observeData(this._data);
+    observe(this._data);
 
     this.$compile = new Compile(options.el || document.body, this);
 }
