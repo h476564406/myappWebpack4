@@ -3,7 +3,7 @@ import { parsePath, noop } from './util';
 
 let uid = 0;
 
-// 订阅者Watcher
+// 观察者Watcher
 function Watcher(vm, expOrFn, cb) {
     this.vm = vm;
     this.property = expOrFn;
