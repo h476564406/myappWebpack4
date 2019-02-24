@@ -23,7 +23,7 @@ function Compile(el, vm) {
 
         // 如果这个组件标明启用了服务器渲染，因为服务端返回的html中已经存在该节点，采用replaceChild的方式。
         if (this.$component && this.$component.dataset.serverRendered) {
-            this.$el.replaceChild(this.$fragment, this.$component);
+            this.compileNode(this.$component);
         } else {
             this.$el.appendChild(this.$fragment);
         }

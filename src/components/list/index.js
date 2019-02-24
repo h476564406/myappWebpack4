@@ -1,5 +1,5 @@
 import MVVM from 'MVVM';
-import styles from './listcss';
+import styles from './index.css';
 
 export const id = 'list';
 const template = `

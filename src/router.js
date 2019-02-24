@@ -1,14 +1,13 @@
 // import HashRouter from './Route/HashRouter';
 import HistoryRouter from './Route/HistoryRouter';
 // 同步加载
-import Home from './components/Home';
+import Home from './components/home';
 
 // 异步加载，到某个时刻再加载
-const List = () =>
-    import(/* webpackChunkName: "list" */ './components/List.js');
+const List = () => import(/* webpackChunkName: "list" */ './components/list');
 
 const Detail = () =>
-    import(/* webpackChunkName: "detail" */ './components/Detail.js');
+    import(/* webpackChunkName: "detail" */ './components/detail');
 
 const historyRouter = new HistoryRouter('#app');
 historyRouter.register('/', Home, 'home');

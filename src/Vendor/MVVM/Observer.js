@@ -1,8 +1,5 @@
-import { arrayMethods } from './array';
+import { isPlainObject, hasOwn } from './util';
 import Dep from './Dep';
-import { isObject, hasOwn, isPlainObject } from './Util';
-
-const arrayKeys = Object.getOwnPropertyNames(arrayMethods);
 
 function def(obj, key, val, enumerable) {
     Object.defineProperty(obj, key, {
@@ -13,32 +10,6 @@ function def(obj, key, val, enumerable) {
     });
 }
 
-function dependArray(value) {
-    for (let e, i = 0, l = value.length; i < l; i++) {
-        e = value[i];
-        e && e.__ob__ && e.__ob__.dep.depend();
-        if (Array.isArray(e)) {
-            dependArray(e);
-        }
-    }
-}
-
-function protoAugment(target, src) {
-    /* eslint-disable no-proto */
-    target.__proto__ = src;
-    /* eslint-enable no-proto */
-}
-
-/* istanbul ignore next */
-function copyAugment(target, src, keys) {
-    for (let i = 0, l = keys.length; i < l; i++) {
-        const key = keys[i];
-        def(target, key, src[key]);
-    }
-}
-
-const hasProto = '__proto__' in {};
-
 function Observer(value) {
     this.value = value;
     this.dep = new Dep();
@@ -46,16 +17,7 @@ function Observer(value) {
 
     def(value, '__ob__', this);
 
-    if (Array.isArray(value)) {
-        if (hasProto) {
-            protoAugment(value, arrayMethods);
-        } else {
-            copyAugment(value, arrayMethods, arrayKeys);
-        }
-        this.observeArray(value);
-    } else {
-        this.walk(value);
-    }
+    this.walk(value);
 }
 
 Observer.prototype = {
@@ -73,8 +35,6 @@ Observer.prototype = {
         }
     },
 
-    // 1. 为property收集watchers(dep<-->watchers), dep 是该属性的的 watcher collector
-    // 2. value全是引用类型
     defineReactive(obj, key, val, shallow = false) {
         const dep = new Dep();
 
@@ -93,9 +53,6 @@ Observer.prototype = {
 
                     if (childOb) {
                         childOb.dep.depend();
-                        if (Array.isArray(value)) {
-                            dependArray(value);
-                        }
                     }
                 }
 
@@ -104,14 +61,16 @@ Observer.prototype = {
 
             set: function reactiveSetter(newVal) {
                 const value = val;
-                /* eslint-disable no-self-compare */
+
                 if (
                     newVal === value ||
                     (newVal !== newVal && value !== value)
                 ) {
                     return;
                 }
+
                 val = newVal;
+
                 childOb = !shallow && observe(newVal);
                 dep.notify();
             },
@@ -119,16 +78,7 @@ Observer.prototype = {
     },
 };
 
-// 1. 为data的所有属性设置依赖收集函数 defineReactive get()  dep.connect(Dep.target);
-// 2. 为data的所有属性设置更新函数 defineReactive set() dep.notify();
 export function observe(value, asRootData) {
-    if (
-        !isObject(value)
-        // || value instanceof VNode
-    ) {
-        return;
-    }
-
     let ob;
 
     if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
@@ -143,5 +93,6 @@ export function observe(value, asRootData) {
     if (asRootData && ob) {
         ob.vmCount++;
     }
+
     return ob;
 }

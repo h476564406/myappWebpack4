@@ -40,6 +40,11 @@
         "import/prefer-default-export": [0],
         // 允许使用_
         "no-underscore-dangle": [0],
+        "no-plusplus": [0],
+        "no-use-before-define": [0],
+        "no-self-compare": [0],
+        "no-unused-vars": [0],
+        "prefer-destructuring": [0],
         // 允许不写全路径
         "import/no-unresolved": [0],
         // 允许不写全后缀

@@ -1,5 +1,5 @@
 import MVVM from 'MVVM';
-import styles from './detailcss';
+import styles from './index.css';
 
 export const id = 'detail';
 const template = `

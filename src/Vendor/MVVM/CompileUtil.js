@@ -1,5 +1,5 @@
 import Watcher from './Watcher';
-import { getValue, setValue } from './Util';
+import { getValue, setValue } from './util';
 
 function updater(node, nodeHtml) {
     return {
@@ -77,7 +77,7 @@ export function CompileUtil(vm) {
 
             const value = getValue(vm, property);
 
-            // 添加事件监听器，当 <input> 或 <textarea> 元素的值更改时，对比新旧值，决定是否set. value=>data
+            // 添加事件监听器，当 <input> 或 <textarea> 元素的值更改时，对比新旧值，决定是否set
             node.addEventListener('input', e => {
                 const newValue = e.target.value;
 

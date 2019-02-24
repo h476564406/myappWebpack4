@@ -17,7 +17,7 @@ clientFileList.entryJs.forEach(element => {
     scripts += `<script src="${clientFileList.publicPath}${element}"></script>`;
 }, this);
 
-console.log('scripts', scripts);
+console.log('css', css);
 // 其它请求路径返回对应的本地文件
 app.use('/dist', express.static('./dist'));
 

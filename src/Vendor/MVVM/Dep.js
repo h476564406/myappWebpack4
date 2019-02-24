@@ -1,4 +1,3 @@
-// watcher中用dep.id来判断是否已经订阅该属性。
 let uid = 0;
 
 function Dep() {

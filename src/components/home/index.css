@@ -1,9 +1,7 @@
-/* 不会被编译的类名 */
 :local(.yellow) {
     background: #ffe600;
 }
 
-/* 会被编译的类名 */
 :global(.blue) {
     background: #00e2ff;
 }

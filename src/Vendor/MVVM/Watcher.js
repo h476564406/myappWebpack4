@@ -1,26 +1,14 @@
 import { pushTarget, popTarget } from './Dep';
-import { parsePath, noop } from './Util';
-import { traverse } from './traverse';
+import { parsePath, noop } from './util';
 
 let uid = 0;
 
 // 订阅者Watcher
-function Watcher(vm, expOrFn, cb, options = {}) {
+function Watcher(vm, expOrFn, cb) {
     this.vm = vm;
-
-    if (options) {
-        this.deep = !!options.deep;
-        this.user = !!options.user;
-        this.lazy = !!options.lazy;
-        this.sync = !!options.sync;
-        this.before = options.before;
-    } else {
-        this.deep = this.user = this.lazy = this.sync = false;
-    }
-
     this.property = expOrFn;
     this.cb = cb;
-    this.id = ++uid; // uid for batching
+    this.id = ++uid;
     this.depIds = new Set();
 
     // get getter function
@@ -58,12 +46,6 @@ Watcher.prototype = {
         } catch (e) {
             console.log('e', e);
         } finally {
-            // "touch" every property so they are all tracked as
-            // dependencies for deep watching
-            if (this.deep) {
-                traverse(value);
-            }
-
             popTarget();
         }
 
